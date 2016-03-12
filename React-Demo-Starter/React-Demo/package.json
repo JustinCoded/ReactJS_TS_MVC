@@ -1,0 +1,21 @@
+{
+  "version": "1.0.0",
+  "name": "ASP.NET",
+  "private": true,
+  "dependencies": {
+    "react": "^0.14.7",
+    "react-dom": "^0.14.7",
+    "react-redux": "^4.4.0",
+    "redux": "^3.3.1"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-concat": "^2.6.0",
+    "gulp-typescript": "^2.12.1",
+    "redux-devtools": "^3.1.1",
+    "tsd": "^0.6.5",
+    "typescript": "^1.8.7"
+  }
+
+}

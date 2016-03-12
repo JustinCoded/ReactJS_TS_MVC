@@ -1,36 +1,47 @@
 
-## Why use React? TypeScript? ASP.NET MVC?
-- ASP.NET MVC 
-    - Strong server side technology. 
-    - Reuse of existing systems
-    - Platform of Choice?
-    - Excellent tooling/productivity
+## Why? 
+- Why provide a good UX? 
+- Why do we care what tech we develop on?
+- Why do we want to re-use code?
+- Why do we want to avoid POST back? 
 
-  But 
-    - Post Backs are SLOW
-    - Full page re-renders 
+- Why do this presentation? 
+
+- Why use React? TypeScript? ASP.NET MVC?
     
+---   
+    - ASP.NET MVC 
+        - Strong server side technology. 
+        - Reuse of existing systems
+        - Platform of Choice?
+        - Excellent tooling/productivity
+
+    But 
+        - Post Backs are SLOW
+        - Full page re-renders 
+---         
+
 - React
     - Fast
         - Virtual DOM provides diffs
         - Only re-renders what changed ()
-    - Composable
-    
-        
-- Components over HTML Templates 
- - Uses a series of components to build up views
- - Unified markup and view logic make for easier to maintain app.
- - Because we aren't doing manual string concat there is less opertunity for XSS attacks.
-- Speed
- - Hold virtual dom and runs diffs during updates to only change what's needed 
-
+    - Composable        
+---
 ## What is Composability
-- a group of things that are simple individually, but can be put together to create something more usefull. 
+- A group of things that are simple individually, but can be put together to create something more usefull. 
+- Components over HTML Templates 
+- Uses a series of components to build up views
+- Unified markup and view logic make for easier to maintain app.
+- Because we aren't doing manual string concat there is less opertunity for XSS attacks.
 
-![](https://i.imgur.com/4trNW.jpg)
-
- 
+--- 
 ## Tooling 
+       
+ - Visual Studio 2013
+    - Can work => more CLI
+ - Visual Studio 2015
+    - Better GUI support for frontend tooling (gulp, npm, etc...)  
+    
 - Gulp - Task runner    
 [http://gulpjs.com](http://gulpjs.com)
 
@@ -74,11 +85,7 @@
         tsd init
         tsd install *{def pkg name here}* --save
     ```
-        
- - Visual Studio 2013
-    - Can work => more CLI
- - Visual Studio 2015
-    - Better GUI support for frontend tooling (gulp, npm, etc...)  
+ 
 
  ## Libraries & Frameworks
  - React & ReactDOM 
@@ -170,11 +177,11 @@
     - Create Main.tsx in Content/Components
     - Add Main class and props
     ```
-    interface IMainProps {
-        model: IProduct[]; 
+    interface MainProps {
+        model: Product[]; 
     }
     
-    interface IProduct {
+    interface ProductProps {
         Title: string;
         SKU: string; 
         Brand: string;
@@ -268,6 +275,117 @@
         );
     }
     ```
+    
+--- 
+## Redux
+- Add store to ProductProps
+```
+    interface ProductProps {
+        Title: string;
+        SKU: string;
+        Brand: string;
+        Price: number;
+        Image: string;
+        store: Redux.Store; 
+    }
+```    
+
+- Add Click method to Product Components
+```
+    class ProductComponent extends React.Component<ProductProps, {}> {
+
+        addItemToCart = function(itemSKU: string) {
+            console.log("Clicked Add to Cart");
+            this.props.store.dispatch({ type: "ADD-TO-CART", sku: itemSKU });
+        };
+
+        render() {
+            return (
+                <div className="col-md-4">
+                    <div className="panel panel-default">
+                        <div className="panel-heading">{this.props.Title}</div>
+                        <div className="panel-body">
+                            <img src={"../Content/images/" + this.props.Image } height="120" width="120" />
+                            <div>
+                                <div>Brand: {this.props.Brand}</div>
+                                <div>SKU: {this.props.SKU}</div>
+                                <div>Price: ${this.props.Price}</div>
+                                <button className="glyphicon glyphicon-shopping-cart" onClick={ () => this.addItemToCart(this.props.SKU)}></button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+    }
+```
+
+- Add store to MainProps    
+```
+    interface MainProps {
+        model: Product[];
+        store: Redux.Store;
+    }
+```
+
+- Add AddItem 
+```
+    interface AddItem {
+        type: string; 
+        sku: string; 
+    }
+```
+
+- Pipe model down through MainProductPage
+```
+    class MainProductPage extends React.Component<MainProps, {}> {
+
+     static create(elementId: string, model: Product[]) {
+        console.log('initial model', model);
+
+         const reducer = (state: State, action: AddItem): any => {
+             switch (action.type) {
+                 case 'ADD-TO-CART':
+                     var newItems = state.items;
+                     newItems.push(action.sku);
+                     return {
+                         items: newItems
+                     };
+                 
+                 default:
+                     return state;
+             }
+         };
+         
+        const store = Redux.createStore(reducer, {items: new Array<string>()});
+
+        const render = () => {
+            ReactDOM.render(
+                <MainProductPage model={model} store={store} />,
+                document.getElementById(elementId));
+        };
+         store.subscribe(() => {
+             console.log(JSON.stringify(store.getState()));
+         });
+        render();
+    };
+   
+    render() {
+        var products = this.props.model.map((product, index) =>
+            <div key={index}>
+                <ProductComponent Title={product.Title} SKU={product.SKU} Brand={product.Brand} Price={product.Price} Image={product.Image} store={this.props.store}  />
+            </div>);
+
+        return (
+            <div className="container">
+                {products}
+            </div>
+           
+        );
+    }
+}
+```
     
 ## __THE END__
     

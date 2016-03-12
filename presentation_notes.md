@@ -1,15 +1,34 @@
-## What is Composability
-- a group of things that are simple individually, but can be put together to create something more usefull. 
 
-![](https://i.imgur.com/4trNW.jpg)
+## Why use React? TypeScript? ASP.NET MVC?
+- ASP.NET MVC 
+    - Strong server side technology. 
+    - Reuse of existing systems
+    - Platform of Choice?
+    - Excellent tooling/productivity
 
-## Why use React? 
+  But 
+    - Post Backs are SLOW
+    - Full page re-renders 
+    
+- React
+    - Fast
+        - Virtual DOM provides diffs
+        - Only re-renders what changed ()
+    - Composable
+    
+        
 - Components over HTML Templates 
  - Uses a series of components to build up views
  - Unified markup and view logic make for easier to maintain app.
  - Because we aren't doing manual string concat there is less opertunity for XSS attacks.
 - Speed
  - Hold virtual dom and runs diffs during updates to only change what's needed 
+
+## What is Composability
+- a group of things that are simple individually, but can be put together to create something more usefull. 
+
+![](https://i.imgur.com/4trNW.jpg)
+
  
 ## Tooling 
 - Gulp - Task runner    
@@ -73,7 +92,6 @@
     - Adds classes into the mix
     - Developed by Anders Hejlsberg, one of the lead architects of C# 
  - Gulp       
-    - gulp-browserify
     - gulp-typescript
     - gulp-clean
     - gulp-concat
